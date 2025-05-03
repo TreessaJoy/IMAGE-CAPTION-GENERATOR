@@ -1,0 +1,28 @@
+<!DOCTYPE html> 
+<html lang="en"> 
+<head> 
+<meta charset="UTF-8"> 
+<meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+<title>Image Caption Generator</title> 
+<link rel="stylesheet" href="style.css"> 
+</head> 
+<body> 
+<div class="container"> 
+<h1>•
+ ç,
+ .。
+ˆ ◆ Image Caption Generator</h1> 
+<!-- Image Upload Section --> 
+<label for="imageInput" class="custom-file-up l o a d " > J
+ ) Upload Image</label> 
+<input type="file" id="imageInput" accept="image/*" onchange="previewImage()"> 
+<div id="imagePreview"></div> 
+<!-- Buttons --> 
+<button class="generate-btn" onclick="uploadImage()">˙
+ x + Generate Caption</button> 
+<p id="caption"></p> 
+<button class="speak-btn" onclick="speakCaption()">K}Speak Caption</button> 
+</div> 
+<script src="script.js"></script> 
+</body> 
+</html>
