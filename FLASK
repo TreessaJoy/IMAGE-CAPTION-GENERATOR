@@ -1,0 +1,47 @@
+import flask 
+import flask_cors 
+print("Flask and Flask-CORS are installed.") 
+!pip install flask flask-cors transformers torch torchvision pillow gtts 
+from flask import Flask, request, jsonify, send_file 
+from flask_cors import CORS 
+import torch 
+from transformers import BlipProcessor, BlipForConditionalGeneration 
+from gtts import gTTS 
+import os from PIL import Imagefrom io import BytesIO 
+import threading 
+#Initialize Flask 
+app = Flask(name) 
+CORS(app) # Enable CORS for frontend access 
+#Load BLIP Model 
+model_name = "Salesforce/blip-image-captioning-base" 
+processor = BlipProcessor.from_pretrained(model_name) 
+model = BlipForConditionalGeneration.from_pretrained(model_name) 
+@app.route("/") 
+def home(): 
+return "Flask API is running!" 
+@app.route("/upload", methods=["POST"]) 
+def upload_image(): 
+if "image" not in request.files: 
+return jsonify({"error": "No image uploaded"}), 400 
+image = request.files["image"] 
+# Process image for captioning 
+inputs = processor(images=image, return_tensors="pt") 
+outputs = model.generate(**inputs) 
+caption = processor.decode(outputs[0], skip_special_tokens=True) 
+return jsonify({"caption": caption}) 
+@app.route("/text-to-speech", methods=["POST"]) 
+def text_to_speech(): 
+data = request.get_json() 
+text = data.get("caption", "") 
+if not text: 
+return jsonify({"error": "No caption provided"}), 400 
+# Convert text to speech 
+tts = gTTS(text=text, lang="en", slow=False) 
+audio_path = "caption.mp3" 
+tts.save(audio_path) 
+return send_file(audio_path, as_attachment=True, mimetype="audio/mpeg") 
+#Start Flask in Jupyter Notebook using threading 
+def run_flask(): 
+app.run(host="0.0.0.0", port=5000, debug=True, use_reloader=False) 
+flask_thread = threading.Thread(target=run_flask) 
+flask_thread.start()
